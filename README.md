@@ -1,3 +1,8 @@
+RezWolf
+======
+
+RezWolf is a fork of ECWolf with features specialized for full TCs
+
 ECWolf
 ======
 
