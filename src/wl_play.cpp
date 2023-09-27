@@ -410,11 +410,18 @@ void PollKeyboardMove (void)
 	TicCmd_t &cmd = control[ConsolePlayer];
 
 	int delta = (!alwaysrun && cmd.buttonstate[bt_run]) || (alwaysrun && !cmd.buttonstate[bt_run]) ? RUNMOVE : BASEMOVE;
-
+	/*
+	controlmx
+	controlmy
+	*/
 	if(cmd.buttonstate[bt_moveforward])
-		cmd.controly -= delta;
-	if(cmd.buttonstate[bt_movebackward])
-		cmd.controly += delta;
+		controlmy -= delta/3;
+	else if(cmd.buttonstate[bt_movebackward] && !cmd.buttonstate[bt_moveforward])
+		controlmy += delta/3;
+	else if(controlmy<0)
+		controlmy = clamp(controlmy+2,-100,0);
+	else if(controlmy>0)
+		controlmy = clamp(controlmy-2,0,100);
 	if(cmd.buttonstate[bt_turnleft])
 		cmd.controlx -= delta;
 	if(cmd.buttonstate[bt_turnright])
@@ -423,6 +430,18 @@ void PollKeyboardMove (void)
 		cmd.controlstrafe -= delta;
 	if(cmd.buttonstate[bt_straferight])
 		cmd.controlstrafe += delta;
+	
+	if(controlmy < -100)
+		controlmy = -100;
+	if(controlmy > 100)
+		controlmy = 100;
+	
+	if(controlmx < -100)
+		controlmx = -100;
+	if(controlmx > 100)
+		controlmx = 100;
+	
+	cmd.controly = controlmy
 }
 
 

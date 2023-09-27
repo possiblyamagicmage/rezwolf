@@ -26,7 +26,7 @@ extern unsigned short Paused;
 //
 struct TicCmd_t
 {
-	int controlx,controly, controlstrafe; // range from -100 to 100
+	int controlx,controly, controlstrafe, controlmx,controlmy; // range from -100 to 100
 	int controlpanx, controlpany;
 	BYTE buttonstate[NUMBUTTONS], ambuttonstate[NUMAMBUTTONS];
 	BYTE buttonheld[NUMBUTTONS], ambuttonheld[NUMAMBUTTONS];
