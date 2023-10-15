@@ -1268,7 +1268,7 @@ void    ThreeDRefresh (void)
 
 	VL_UnlockSurface();
 	vbuf = NULL;
-
+	StatusBar->DrawStatusBar();
 	if(player_t *player = players[ConsolePlayer].camera->player)
 	{
 		if(player->ScreenFader)

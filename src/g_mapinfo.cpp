@@ -552,6 +552,10 @@ protected:
 			ParseBoolAssignment(mapInfo.SecretDeathSounds);
 		else if(key.CompareNoCase("SpawnWithWeaponRaised") == 0)
 			mapInfo.SpawnWithWeaponRaised = true;
+		else if (key.CompareNoCase("TimerCountDown") == 0)
+			ParseBoolAssignment(mapInfo.TimerCountDown);
+		else if (key.CompareNoCase("TimerEndActor") == 0)
+			ParseStringAssignment(mapInfo.TimerEndActor);
 		else if(key.CompareNoCase("TitlePatch") == 0)
 		{
 			FString textureName;
@@ -602,17 +606,17 @@ public:
 protected:
 	bool CheckKey(FString key)
 	{
-		if(key.CompareNoCase("advisorycolor") == 0)
+		if (key.CompareNoCase("advisorycolor") == 0)
 			ParseColorAssignment(gameinfo.AdvisoryColor);
-		else if(key.CompareNoCase("advisorypic") == 0)
+		else if (key.CompareNoCase("advisorypic") == 0)
 			ParseStringAssignment(gameinfo.AdvisoryPic);
-		else if(key.CompareNoCase("border") == 0)
+		else if (key.CompareNoCase("border") == 0)
 		{
 			sc.MustGetToken('=');
-			if(sc.CheckToken(TK_Identifier))
+			if (sc.CheckToken(TK_Identifier))
 			{
 				gameinfo.Border.issolid = true;
-				if(sc->str.CompareNoCase("inset") != 0)
+				if (sc->str.CompareNoCase("inset") != 0)
 					sc.ScriptMessage(Scanner::ERROR, "Expected 'inset' got '%s' instead.", sc->str.GetChars());
 				sc.MustGetToken(',');
 				sc.MustGetToken(TK_StringConst);
@@ -657,66 +661,75 @@ protected:
 				gameinfo.Border.br = sc->str;
 			}
 		}
-		else if(key.CompareNoCase("borderflat") == 0)
+		else if (key.CompareNoCase("borderflat") == 0)
 			ParseStringAssignment(gameinfo.BorderFlat);
-		else if(key.CompareNoCase("deathtransition") == 0)
+		else if (key.CompareNoCase("deathtransition") == 0)
 		{
 			sc.MustGetToken('=');
 			sc.MustGetToken(TK_StringConst);
-			if(sc->str.CompareNoCase("fizzle") == 0)
+			if (sc->str.CompareNoCase("fizzle") == 0)
 				gameinfo.DeathTransition = GameInfo::TRANSITION_Fizzle;
-			else if(sc->str.CompareNoCase("fade") == 0)
+			else if (sc->str.CompareNoCase("fade") == 0)
 				gameinfo.DeathTransition = GameInfo::TRANSITION_Fade;
 			else
 				sc.ScriptMessage(Scanner::ERROR, "Unknown transition type '%s'.", sc->str.GetChars());
 		}
-		else if(key.CompareNoCase("dialogcolor") == 0)
+		else if (key.CompareNoCase("dialogcolor") == 0)
 			ParseFontColorAssignment(gameinfo.FontColors[GameInfo::DIALOG]);
-		else if(key.CompareNoCase("doorsoundsequence") == 0)
+		else if (key.CompareNoCase("doorsoundsequence") == 0)
 			ParseNameAssignment(gameinfo.DoorSoundSequence);
-		else if(key.CompareNoCase("drawreadthis") == 0)
+		else if (key.CompareNoCase("drawreadthis") == 0)
 			ParseBoolAssignment(gameinfo.DrawReadThis);
-		else if(key.CompareNoCase("trackhighscores") == 0)
+		else if (key.CompareNoCase("trackhighscores") == 0)
 			ParseBoolAssignment(gameinfo.TrackHighScores);
-		else if(key.CompareNoCase("gamecolormap") == 0)
+		else if (key.CompareNoCase("gamecolormap") == 0)
 			ParseStringAssignment(gameinfo.GameColormap);
-		else if(key.CompareNoCase("gameoverpic") == 0)
+		else if (key.CompareNoCase("gameoverpic") == 0)
 			ParseStringAssignment(gameinfo.GameOverPic);
-		else if(key.CompareNoCase("victorypic") == 0)
+		else if (key.CompareNoCase("victorypic") == 0)
 			ParseStringAssignment(gameinfo.VictoryPic);
-		else if(key.CompareNoCase("gamepalette") == 0)
+		else if (key.CompareNoCase("gamepalette") == 0)
 			ParseStringAssignment(gameinfo.GamePalette);
-		else if(key.CompareNoCase("gibfactor") == 0)
+		else if (key.CompareNoCase("gibfactor") == 0)
 		{
 			sc.MustGetToken('=');
 			sc.MustGetToken(TK_FloatConst);
-			gameinfo.GibFactor = static_cast<fixed>(sc->decimal*FRACUNIT);
+			gameinfo.GibFactor = static_cast<fixed>(sc->decimal * FRACUNIT);
 		}
-		else if(key.CompareNoCase("signon") == 0)
+		else if (key.CompareNoCase("signon") == 0)
 			ParseStringAssignment(gameinfo.SignonLump);
-		else if(key.CompareNoCase("menufade") == 0)
+		else if (key.CompareNoCase("menufade") == 0)
 			ParseColorAssignment(gameinfo.MenuFadeColor);
-		else if(key.CompareNoCase("menucolors") == 0)
+		else if (key.CompareNoCase("menucolors") == 0)
 			// Border1, Border2, Border3, Background, Stripe, StripeBG
 			ParseColorArrayAssignment(gameinfo.MenuColors, 6);
-		else if(key.CompareNoCase("messagecolors") == 0)
+		else if (key.CompareNoCase("messagecolors") == 0)
 			// Background, Top Color, Bottom Color
 			ParseColorArrayAssignment(gameinfo.MessageColors, 3);
-		else if(key.CompareNoCase("messagefontcolor") == 0)
+		else if (key.CompareNoCase("messagefontcolor") == 0)
 			ParseFontColorAssignment(gameinfo.FontColors[GameInfo::MESSAGEFONT]);
-		else if(key.CompareNoCase("titlemusic") == 0)
+		else if (key.CompareNoCase("titlemusic") == 0)
 			ParseStringAssignment(gameinfo.TitleMusic);
-		else if(key.CompareNoCase("titlepalette") == 0)
+		else if (key.CompareNoCase("titlepalette") == 0)
 			ParseStringAssignment(gameinfo.TitlePalette);
-		else if(key.CompareNoCase("titlepage") == 0)
+		else if (key.CompareNoCase("titlepage") == 0)
 			ParseStringAssignment(gameinfo.TitlePage);
-		else if(key.CompareNoCase("titletime") == 0)
+		else if (key.CompareNoCase("titletime") == 0)
 			ParseIntAssignment(gameinfo.TitleTime);
-		else if(key.CompareNoCase("translator") == 0)
+		else if (key.CompareNoCase("lockborder") == 0)
+			ParseIntAssignment(gameinfo.LockBorder);
+		else if (key.CompareNoCase("playermovement") == 0)
+			ParseIntAssignment(gameinfo.MoveStyle);
+		else if (key.CompareNoCase("translator") == 0)
 		{
 			sc.MustGetToken('=');
 			sc.MustGetToken(TK_StringConst);
 			gameinfo.Translator.Push(sc->str);
+		}
+		else if (key.CompareNoCase("itemscount") == 0)
+		{
+			ParseStringAssignment(gameinfo.ItemCountActor);
+			printf("Item to track is "+gameinfo.ItemCountActor+"\n");
 		}
 		else if(key.CompareNoCase("menumusic") == 0)
 			ParseStringAssignment(gameinfo.MenuMusic);

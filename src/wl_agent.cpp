@@ -179,7 +179,7 @@ void ControlMovement (APlayerPawn *ob)
 		// strafing
 		//
 		//
-		strafe += controlx;
+		strafe += controlx/3;
 	}
 	else
 	{

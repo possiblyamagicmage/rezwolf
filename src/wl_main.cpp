@@ -504,6 +504,8 @@ static void InitGame()
 // Load Noah's Ark quiz
 //
 	Dialog::LoadGlobalModule("NOAHQUIZ");
+	Dialog::LoadGlobalModule("CDIALOG1");
+	Dialog::LoadGlobalModule("CDIALOG2"); // load custom dialogs 1 and 2 if they exist
 
 //
 // Net game?
@@ -577,7 +579,7 @@ static void SetViewSize (unsigned int screenWidth, unsigned int screenHeight)
 
 	unsigned int width;
 	unsigned int height;
-	if(viewsize == 21)
+	if(viewsize == 21 || gameinfo.LockBorder)
 	{
 		width = screenWidth;
 		height = screenHeight;
@@ -1130,6 +1132,10 @@ static const char* CheckParameters(int argc, char *argv[], TArray<FString> &file
 		if(hasError) printf("\n");
 		printf(
 			"%s\n"
+			"RezWolf is a fork of ECWolf!\n"
+			"Do not contact ECWolf devs about any issues you find in Rezwolf\n"
+			"unless you can replicate them in the latest version of\n"
+			"development ecwolf, NOT stable ecwolf\n"
 			"http://maniacsvault.net/ecwolf/\n"
 			"Based on Wolf4SDL v1.7\n"
 			"Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"

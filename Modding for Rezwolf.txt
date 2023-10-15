@@ -1,0 +1,19 @@
+Rezwolf is designed to extend modding support while staying close to ecwolf, and as such ive added some useful features
+
+Borderlock - Mapinfo feature (in gameinfo section)
+Enable with `lockborder = 1`
+Locks the border to maximum (20-21), allows for floating hud
+
+Itemscount - Mapinfo feature (in gameinfo section)
+Set this to an actor name to use that actor for items counter
+Example:
+`itemscount = "MacTreasureItem`
+If not set then will default to mactreasureitem
+
+Timer - Latchcfg + mapinfo feature
+This is a timer (obviously)
+Use timerx timery timerdigits timerenabled in LATCHCFG
+In a level info section you can set:
+`timercountdown = true` This will make the timer count down until it reaches par time
+`timerendactor = "BombExplosion"` This is the actor to spawn when time runs out and countdown is enabled
+The timerendactor will spawn at the players position

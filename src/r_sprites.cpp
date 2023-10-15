@@ -52,6 +52,7 @@
 #include "a_inventory.h"
 #include "id_us.h"
 #include "id_vh.h"
+#include <g_mapinfo.h>
 
 #define TEX_DWNAME(tex) MAKE_ID(tex->Name[0], tex->Name[1], tex->Name[2], tex->Name[3])
 
@@ -509,7 +510,7 @@ void Scale3DSpriter(AActor *actor, int x1, int x2, FTexture *tex, bool flip, con
 		while(i > nexti)
 		{
 			++x;
-			assert(x < texWidth);
+			//assert(x < texWidth);
 			src = tex->GetColumn(flip ? texWidth - x - 1 : x, NULL);
 
 			dxa += dxx;
@@ -659,7 +660,7 @@ void R_DrawPlayerSprite(AActor *actor, const Frame *frame, fixed offsetX, fixed 
 	const fixed centeringOffset = (centerx - 2*centerxwide)<<FRACBITS;
 	const fixed leftedge = FixedMul((160<<FRACBITS) - fixed(tex->GetScaledLeftOffsetDouble()*FRACUNIT) + offsetX, pspritexscale) + centeringOffset;
 	fixed upperedge = ((100-32)<<FRACBITS) + fixed(tex->GetScaledTopOffsetDouble()*FRACUNIT) - offsetY - AspectCorrection[r_ratio].tallscreen;
-	if(viewsize == 21 && players[ConsolePlayer].ReadyWeapon)
+	if((viewsize == 21 && players[ConsolePlayer].ReadyWeapon) || gameinfo.LockBorder)
 	{
 		upperedge -= players[ConsolePlayer].ReadyWeapon->yadjust;
 	}

@@ -58,6 +58,8 @@ public:
 	int 	PsychedOffset;
 	bool	DrawReadThis;
 	bool	TrackHighScores;
+	int		LockBorder;
+	int		MoveStyle;
 
 	int		TitleTime;
 	FString	BorderFlat;
@@ -77,6 +79,8 @@ public:
 	FString GameOverPic;
 	FString VictoryPic;
 	FString PageIndexText;
+	FString ItemCountActor;
+
 	// Special stack for strings like the default translator.
 	// This will allow the previous default to be included.
 	class FStringStack
@@ -196,6 +200,9 @@ public:
 	bool			ForceTally;
 	bool			ResetHealth;
 	bool			ResetInventory;
+
+	bool TimerCountDown;
+	FString TimerEndActor;
 
 	TArray<const ClassDef *>	EnsureInventory;
 

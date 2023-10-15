@@ -18,6 +18,8 @@
 #include "a_keys.h"
 #include "wl_iwad.h"
 #include "wl_net.h"
+#include <wl_menu.h>
+//#include <g_mapinfo.h>
 
 /*
 =============================================================================
@@ -39,7 +41,7 @@ struct LatchConfig
 static struct StatusBarConfig_t
 {
 	LatchConfig Floor, Score, Lives, Health, Ammo;
-	LatchConfig Items;
+	LatchConfig Items, Timer;
 
 	// The following don't use the digits
 	LatchConfig Mugshot, Keys, Weapon;
@@ -49,6 +51,7 @@ static struct StatusBarConfig_t
 	{1, 1, 112, 16},
 	{1, 3, 168, 16},
 	{1, 3, 208, 16},
+	{0, 2, 280, 16},
 	{0, 2, 280, 16},
 	{1, 0, 136, 4},
 	{1, 0, 240, 4},
@@ -118,6 +121,7 @@ private:
 	void DrawScore();
 	void DrawWeapon();
 	void SetupStatusbar();
+	void DrawTimer();
 
 	int facecount;
 	bool mac;
@@ -395,11 +399,14 @@ void WolfStatusBar::DrawItems (void)
 {
 	if((viewsize == 21 && ingame) || !StatusBarConfig.Items.Enabled || players[ConsolePlayer].mo == NULL) return;
 
-	AInventory *items = players[ConsolePlayer].mo->FindInventory(ClassDef::FindClass("MacTreasureItem"));
+	if (gameinfo.ItemCountActor.IsEmpty())
+		gameinfo.ItemCountActor = "MacTreasureItem";
+
+	AInventory *items = players[ConsolePlayer].mo->FindInventory(ClassDef::FindClass(gameinfo.ItemCountActor));
 	unsigned int amount = 0;
 	if(items)
 		amount = items->amount;
-
+	//Message(gameinfo.ItemCountActor);
 	LatchNumber (StatusBarConfig.Items.X,StatusBarConfig.Items.Y,StatusBarConfig.Items.Digits,amount,mac);
 }
 
@@ -521,10 +528,36 @@ void WolfStatusBar::DrawAmmo (void)
 
 //===========================================================================
 
+/*
+===============
+=
+= DrawTimer
+=
+===============
+*/
+
+void WolfStatusBar::DrawTimer(void)
+{
+	if ((viewsize == 21 && ingame) || !StatusBarConfig.Timer.Enabled) return;
+
+	unsigned int seconds = gamestate.TimeCount / 70;
+	FString Timedraw;
+	if (!levelInfo->TimerCountDown)
+		Timedraw.Format("%02d %02d", (seconds % 3600) / 60, seconds % 60);
+	/*
+	else
+		Timedraw.Format("%02d %02d", ((levelInfo->Par % 3600) / 60) * 60 - ((seconds % 3600) / 60), ((levelInfo->Par * 60) % 60) - (seconds % 60));
+	*/
+
+	LatchString(StatusBarConfig.Timer.X, StatusBarConfig.Timer.Y, StatusBarConfig.Timer.Digits, Timedraw);
+}
+
+//===========================================================================
+
 void WolfStatusBar::RefreshBackground(bool noborder)
 {
 	DBaseStatusBar::RefreshBackground(noborder);
-
+	StatusBar->DrawStatusBar();
 	if(viewsize == 21 && ingame)
 		return;
 
@@ -546,6 +579,7 @@ void WolfStatusBar::DrawStatusBar()
 	DrawWeapon ();
 	DrawScore ();
 	DrawItems ();
+	DrawTimer();
 }
 
 //===========================================================================
@@ -618,6 +652,11 @@ void WolfStatusBar::SetupStatusbar()
 			{
 				extrakey = key.Mid(6);
 				var = &StatusBarConfig.Weapon;
+			}
+			else if (key.IndexOf("timer") == 0)
+			{
+				extrakey = key.Mid(5);
+				var = &StatusBarConfig.Timer;
 			}
 			else
 				sc.ScriptMessage(Scanner::ERROR, "Unknown key '%s'.\n", key.GetChars());

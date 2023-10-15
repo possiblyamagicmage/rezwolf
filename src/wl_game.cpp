@@ -325,6 +325,8 @@ void SetupGameLevel (void)
 		map->SpawnThings();
 		CheckSpawnPlayer(true);
 	}
+	if (gameinfo.LockBorder && viewsize < 20)
+		viewsize = 20;
 }
 
 
@@ -406,24 +408,27 @@ void DrawPlayBorderSides(void)
 void DBaseStatusBar::RefreshBackground (bool noborder)
 {
 	FTexture *borderTex = TexMan(levelInfo->GetBorderTexture());
+	int borderlock = gameinfo.LockBorder;
 
-	if(viewscreeny > statusbary1)
-		VWB_DrawFill(borderTex, 0, statusbary1, screenWidth, viewscreeny);
-	VWB_DrawFill(borderTex, 0, viewscreeny, viewscreenx, viewheight + viewscreeny);
-	VWB_DrawFill(borderTex, viewwidth + viewscreenx, viewscreeny, screenWidth, viewheight + viewscreeny);
-	VWB_DrawFill(borderTex, 0, viewscreeny + viewheight, screenWidth, statusbary2);
-	if(statusbarx)
+	if (!borderlock)
 	{
-		VWB_DrawFill(borderTex, 0, 0, statusbarx, statusbary1);
-		VWB_DrawFill(borderTex, screenWidth-statusbarx, 0, screenWidth, statusbary1);
-		VWB_DrawFill(borderTex, 0, statusbary2, statusbarx, screenHeight);
-		VWB_DrawFill(borderTex, screenWidth-statusbarx, statusbary2, screenWidth, screenHeight);
+		if (viewscreeny > statusbary1)
+			VWB_DrawFill(borderTex, 0, statusbary1, screenWidth, viewscreeny);
+		VWB_DrawFill(borderTex, 0, viewscreeny, viewscreenx, viewheight + viewscreeny);
+		VWB_DrawFill(borderTex, viewwidth + viewscreenx, viewscreeny, screenWidth, viewheight + viewscreeny);
+		VWB_DrawFill(borderTex, 0, viewscreeny + viewheight, screenWidth, statusbary2);
+		if (statusbarx)
+		{
+			VWB_DrawFill(borderTex, 0, 0, statusbarx, statusbary1);
+			VWB_DrawFill(borderTex, screenWidth - statusbarx, 0, screenWidth, statusbary1);
+			VWB_DrawFill(borderTex, 0, statusbary2, statusbarx, screenHeight);
+			VWB_DrawFill(borderTex, screenWidth - statusbarx, statusbary2, screenWidth, screenHeight);
+		}
+		// Complete border
+		if (statusbary1)
+			VWB_DrawFill(borderTex, statusbarx, 0, screenWidth - statusbarx, statusbary1);
+		VWB_DrawFill(borderTex, statusbarx, statusbary2, screenWidth - statusbarx, screenHeight);
 	}
-	// Complete border
-	if(statusbary1)
-		VWB_DrawFill(borderTex, statusbarx, 0, screenWidth-statusbarx, statusbary1);
-	VWB_DrawFill(borderTex, statusbarx, statusbary2, screenWidth-statusbarx, screenHeight);
-
 	if(noborder)
 		return;
 	DrawPlayBorderSides();
